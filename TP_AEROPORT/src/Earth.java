@@ -20,7 +20,7 @@ public class Earth extends Group {
         phongMaterial = new PhongMaterial ();
 
         this.getChildren ().add ( sph );
-        phongMaterial.setDiffuseMap( new Image ( "C:\\Users\\ihsan\\Desktop\\ENSEA 3D\\JAVA\\TP_EARTH\\TP_JAVA_3D_ENSEA_EARTH\\TP_AEROPORT\\earth_lights_4800.png" ));
+        phongMaterial.setDiffuseMap( new Image ( "C:\\Users\\josse\\OneDrive\\Documents\\Docs Josselin\\ENSEA\\3emD\\Java\\TP_JAVA_3D_ENSEA_EARTH\\TP_AEROPORT\\earth_lights_4800.png" ));
         sph.setMaterial ( phongMaterial );
         ry.setAxis (Rotate.Y_AXIS );
         this.getTransforms ().add ( ry );
@@ -34,23 +34,42 @@ public class Earth extends Group {
                 ry.setAngle ( timeElapsed * 24.0 );
             }
         };
-        //animationTimer.start();
+        animationTimer.start();
     }
 
     public Sphere createSphere(Aeroport a,Color color){
-        sph = new Sphere ( 2);
-        phongMaterial = new PhongMaterial ();
+        /*
+        sph.getTransforms ().add(new Translate (0, 0, -300));
+        sph.getTransforms ().add(new Rotate ((-a.getLatitude ()*(60.0/90.0)), 0, 0,300,Rotate.X_AXIS));
+        sph.getTransforms ().add(new Rotate ( -a.getLongitude (), 0, 0,300,Rotate.Y_AXIS ));*/
 
-        double X =  301 * Math.cos(Math.toRadians(a.getLatitude ())) * Math.sin(Math.toRadians(a.getLongitude ()));
-        double Y = -301 * Math.sin(Math.toRadians(a.getLatitude ())) + Math.toRadians(a.getLongitude ());
-        double Z = -301 * Math.cos(Math.toRadians(a.getLatitude ())) * Math.cos(Math.toRadians(a.getLongitude ()));
+        return createSphere(a.getLatitude(),a.getLongitude(),color);
+    }
 
-        sph.getTransforms ().add(new Translate ( X, Y, Z));
+    public Sphere createSphere(double latitude, double longitude,Color color){
 
-        phongMaterial.setDiffuseColor ( color );
-        sph.setMaterial ( phongMaterial );
 
-        return sph;
+
+        PhongMaterial col = new PhongMaterial();
+        col.setSpecularColor(color);
+        col.setDiffuseColor(color);
+
+        Sphere coloredSphere = new Sphere(5);
+        coloredSphere.setMaterial(col);
+
+        coloredSphere.setTranslateZ(-sph.getRadius());
+
+        Rotate rPhi = new Rotate (-longitude,
+                -coloredSphere.getTranslateX(),-coloredSphere.getTranslateY(),
+                -coloredSphere.getTranslateZ(),Rotate.Y_AXIS);
+
+        coloredSphere.getTransforms().add(rPhi);
+        Rotate rTheta = new Rotate (-latitude*60.0/90.0,
+                -coloredSphere.getTranslateX(),-coloredSphere.getTranslateY(),
+                -coloredSphere.getTranslateZ(),Rotate.X_AXIS);
+        coloredSphere.getTransforms().add(rTheta);
+
+        return coloredSphere;
     }
 
     public void displayRedSphere(Aeroport a){

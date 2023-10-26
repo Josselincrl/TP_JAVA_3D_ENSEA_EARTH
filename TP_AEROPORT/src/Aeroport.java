@@ -6,6 +6,7 @@ public class Aeroport {
     private final double latitude;
 
     public Aeroport ( String IATA, String name, String country, double longitude, double latitude ) {
+        super();
         this.IATA = IATA;
         this.name = name;
         this.country = country;
